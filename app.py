@@ -1,7 +1,6 @@
 import sys
 import io
 import os
-import numpy as np
 import pandas as pd
 import pickle
 from flask import Flask, request, jsonify, render_template
@@ -89,6 +88,5 @@ def predict():
         print(f"Error en la predicción: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
+if __name__ == '__main__':
+    app.run(debug=True)
