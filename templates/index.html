@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Modelos</title>
+</head>
+<body>
+    <h1>Predicción con Modelos</h1>
+    <form action="/predict" method="post">
+        <!-- Variables numéricas -->
+        <h3>Variables Numéricas:</h3>
+        {% for feature in numerical_features %}
+            <label for="{{ feature }}">{{ feature }}:</label>
+            <input type="text" name="{{ feature }}" required><br>
+        {% endfor %}
+
+        <!-- Variables categóricas -->
+        <h3>Variables Categóricas:</h3>
+        {% for feature, options in categorical_options.items() %}
+            <label for="{{ feature }}">{{ feature }}:</label>
+            <select name="{{ feature }}" required>
+                {% for option in options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+        {% endfor %}
+
+        <!-- Selección del modelo -->
+        <h3>Seleccione el modelo:</h3>
+        <input type="radio" id="logreg" name="model" value="logreg" required>
+        <label for="logreg">Regresión Logística</label><br>
+        <input type="radio" id="rnn" name="model" value="rnn">
+        <label for="rnn">Red Neuronal</label><br>
+
+        <button type="submit">Predecir</button>
+    </form>
+</body>
+</html>
