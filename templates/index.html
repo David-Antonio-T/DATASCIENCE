@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ajuste de la ruta al CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Predicción de Modelos</title>
 </head>
 <body>
-    <h1>Predicción con Modelos</h1>
+    <h1>Predicción con Regresión Logística</h1>
     <form action="/predict" method="post">
         <!-- Variables numéricas -->
         <h3>Variables Numéricas:</h3>
