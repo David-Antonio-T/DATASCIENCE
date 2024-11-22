@@ -6,9 +6,6 @@ import pickle
 from flask import Flask, request, jsonify, render_template
 from tensorflow.keras.models import load_model
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Desactiva el uso de GPU en TensorFlow
-
-
 # Set encoding explicitly
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
