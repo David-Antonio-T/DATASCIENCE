@@ -20,8 +20,8 @@ logreg_model = pickle.load(open('models/pipeline_logreg.pkl', 'rb'), encoding='l
 with open('models/preprocessor.pkl', 'rb') as file:
     preprocessor = pickle.load(file, encoding='latin1')
 
-# Al cargar el dataset
-df = pd.read_csv('df_no_outliers.csv', encoding='utf-8')
+# Al cargar el dataset solo las primeras 1000 filas
+df = pd.read_csv('df_no_outliers.csv', encoding='utf-8').head(1000)  # Reduce a 1000 filas
 
 # Identificar columnas categóricas y sus clases únicas
 numerical_features = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
