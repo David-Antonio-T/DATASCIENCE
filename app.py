@@ -4,7 +4,6 @@ import os
 import pandas as pd
 import pickle
 from flask import Flask, request, jsonify, render_template
-from tensorflow.keras.models import load_model
 
 # Set encoding explicitly
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -14,11 +13,10 @@ os.environ['PYTHONIOENCODING'] = 'utf-8'
 # Crear la aplicación Flask
 app = Flask(__name__)
 
-# Cargar los modelos entrenados
+# Cargar el modelo de regresión logística
 logreg_model = pickle.load(open('models/pipeline_logreg.pkl', 'rb'), encoding='latin1')
-rnn_model = load_model('models/rnn_model.keras')
 
-# Cargar preprocessor con encoding especifico
+# Cargar preprocessor con encoding específico
 with open('models/preprocessor.pkl', 'rb') as file:
     preprocessor = pickle.load(file, encoding='latin1')
 
@@ -45,43 +43,24 @@ def predict():
         # Obtener los datos del formulario
         data = request.form.to_dict()
 
-        # Extraer y eliminar el modelo seleccionado del diccionario
-        model_type = data.pop('model')
-
         # Convertir datos a DataFrame con manejo de codificación
         input_data = pd.DataFrame([data])
         
         # Convertir todos los valores a strings y decodificar
         input_data = input_data.applymap(lambda x: str(x).encode('utf-8', errors='ignore').decode('utf-8'))
 
-        if model_type == 'logreg':
-            # Convertir categóricas a string y numéricas a float
-            for col in input_data.columns:
-                if col in categorical_features:
-                    input_data[col] = input_data[col].astype(str)
-                elif col in numerical_features:
-                    input_data[col] = input_data[col].astype(float)
+        # Convertir categóricas a string y numéricas a float
+        for col in input_data.columns:
+            if col in categorical_features:
+                input_data[col] = input_data[col].astype(str)
+            elif col in numerical_features:
+                input_data[col] = input_data[col].astype(float)
 
-            # Predicción con regresión logística
-            prediction = logreg_model.predict(input_data)
-            predicted_class = int(prediction[0])
+        # Predicción con regresión logística
+        prediction = logreg_model.predict(input_data)
+        predicted_class = int(prediction[0])
 
-        elif model_type == 'rnn':
-            # Preprocesar el input_data con el preprocesador
-            preprocessed_data = preprocessor.transform(input_data)
-
-            # Convertir a matriz densa si es dispersa
-            if hasattr(preprocessed_data, "toarray"):
-                preprocessed_data = preprocessed_data.toarray()
-
-            # Redimensionar para la red neuronal
-            features = preprocessed_data.astype(float).reshape(1, 1, -1)
-
-            # Predicción con la red neuronal
-            prediction = rnn_model.predict(features)
-            predicted_class = int(prediction[0][0] > 0.5)
-
-        return jsonify({'Modelo': model_type, 'Predicción': predicted_class})
+        return jsonify({'Modelo': 'logreg', 'Predicción': predicted_class})
 
     except Exception as e:
         # Registrar el error detallado
