@@ -21,7 +21,7 @@ with open('models/preprocessor.pkl', 'rb') as file:
     preprocessor = pickle.load(file, encoding='latin1')
 
 # Al cargar el dataset solo las primeras 1000 filas
-df = pd.read_csv('df_no_outliers.csv', encoding='utf-8').head(1000)  # Reduce a 1000 filas
+df = pd.read_csv('df_no_outliers.csv', encoding='utf-8')  # Reduce a 1000 filas
 
 # Identificar columnas categóricas y sus clases únicas
 numerical_features = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
@@ -68,4 +68,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
+
