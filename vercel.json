@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "app.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "env": {
+      "FLASK_ENV": "production",
+      "CUDA_VISIBLE_DEVICES": "-1"
+    },
+    "installCommand": "pip install -r requirements.txt",
+    "outputDirectory": "."
+  }
+  
